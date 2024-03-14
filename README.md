@@ -341,10 +341,10 @@
 
 Реализованные программы:
 
-1. [hello_world](./examples/src/hello.asm) -- печатаем 'Hello, World!'
-1. [cat](./examples/src/cat.asm) --  программа cat, повторяем ввод на выводе
-1. [hello_usr](./examples/src/hello_usr.asm) -- запросить у пользователя его имя, считать его, вывести на экран приветствие
-1. [prob2](./examples/src/prob2.asm) -- сумма четных чисел, не превышающих 4 млн, последовательности Фиббоначи
+1. [hello_world](./example/src/hello.asm) -- печатаем 'Hello, World!'
+1. [cat](./example/src/cat.asm) --  программа cat, повторяем ввод на выводе
+1. [hello_usr](./example/src/hello_usr.asm) -- запросить у пользователя его имя, считать его, вывести на экран приветствие
+1. [prob2](./example/src/prob2.asm) -- сумма четных чисел, не превышающих 4 млн, последовательности Фиббоначи
 
 Интеграционные тесты реализованы в [integration_test](./integration_test.py):
 
