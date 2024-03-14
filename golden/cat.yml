@@ -1,0 +1,148 @@
+in_source: |-
+  org 1
+  vector:
+      .word interrupt
+
+  org 10
+  in_port:
+      .word 0
+  out_port:
+      .word 1
+  flag:
+      .word 0
+  line_feed:
+      .word 10
+
+  _start:
+      ei
+      spin_loop:
+          load flag
+          jz spin_loop
+      halt
+
+  interrupt:
+      di
+      in in_port
+      out out_port
+      cmp line_feed
+      jnz returning
+      load flag
+      inc
+      store flag
+      returning:
+          iret
+in_stdin: |
+  ['P', 'e', 'n', 's', 'k', 'o', 'i']
+out_code: |-
+  [{"index": 0, "opcode": "jump", "value": 14, "is_indirect": false},
+   {"index": 1, "opcode": "nop", "value": 18, "is_indirect": false},
+   {"index": 10, "opcode": "nop", "value": 0, "is_indirect": false},
+   {"index": 11, "opcode": "nop", "value": 1, "is_indirect": false},
+   {"index": 12, "opcode": "nop", "value": 0, "is_indirect": false},
+   {"index": 13, "opcode": "nop", "value": 10, "is_indirect": false},
+   {"index": 14, "opcode": "ei", "value": 0, "is_indirect": false},
+   {"index": 15, "opcode": "load", "value": 12, "is_indirect": false},
+   {"index": 16, "opcode": "jz", "value": 15, "is_indirect": false},
+   {"index": 17, "opcode": "halt", "value": 0, "is_indirect": false},
+   {"index": 18, "opcode": "di", "value": 0, "is_indirect": false},
+   {"index": 19, "opcode": "in", "value": 10, "is_indirect": false},
+   {"index": 20, "opcode": "out", "value": 11, "is_indirect": false},
+   {"index": 21, "opcode": "cmp", "value": 13, "is_indirect": false},
+   {"index": 22, "opcode": "jnz", "value": 26, "is_indirect": false},
+   {"index": 23, "opcode": "load", "value": 12, "is_indirect": false},
+   {"index": 24, "opcode": "inc", "value": 0, "is_indirect": false},
+   {"index": 25, "opcode": "store", "value": 12, "is_indirect": false},
+   {"index": 26, "opcode": "iret", "value": 0, "is_indirect": false}]
+
+out_stdout: |
+  source LoC: 32 code instr: 19
+  ============================================================
+  Penskoi
+
+  []
+  instr_counter:  57 ticks: 273
+
+out_log: |
+  DEBUG   machine:decode_and_execute_instruction TICK:    3 | AC:    0 | PC:  14 | IR: jump   | DR:      14 | SP:   0 | Addr:   0 | ToMem:       0 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      14 | mode: normal
+  DEBUG   machine:decode_and_execute_instruction TICK:    6 | AC:    0 | PC:  15 | IR: ei    | DR:       0 | SP:   0 | Addr:  14 | ToMem:       0 | N: 0 | Z: 0 | INT_EN: 1 | mem[Addr]:       0 | mode: normal
+  DEBUG   machine:decode_and_execute_instruction TICK:   10 | AC:    0 | PC:  16 | IR: load  | DR:       0 | SP:   0 | Addr:  12 | ToMem:       0 | N: 0 | Z: 1 | INT_EN: 1 | mem[Addr]:       0 | mode: normal
+  WARNING machine:decode_and_execute_instruction Entering into interruption...
+  DEBUG   machine:decode_and_execute_instruction TICK:   18 | AC:    0 | PC:  19 | IR: di    | DR:       0 | SP: 198 | Addr:  18 | ToMem:      16 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:       0 | mode: interrupt
+  DEBUG   machine:signal_latch_ac input: 'P'
+  DEBUG   machine:decode_and_execute_instruction TICK:   21 | AC:   80 | PC:  20 | IR: in    | DR:      10 | SP: 198 | Addr:  19 | ToMem:      16 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      10 | mode: interrupt
+  DEBUG   machine:signal_output output_symbol_buffer: '' << 'P'
+  DEBUG   machine:decode_and_execute_instruction TICK:   25 | AC:   80 | PC:  21 | IR: out   | DR:       1 | SP: 198 | Addr:  11 | ToMem:      16 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:       1 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:   29 | AC:   80 | PC:  22 | IR: cmp   | DR:      10 | SP: 198 | Addr:  13 | ToMem:      16 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      10 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:   32 | AC:   80 | PC:  26 | IR: jnz   | DR:      26 | SP: 198 | Addr:  22 | ToMem:      16 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      26 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:   40 | AC:   80 | PC:  16 | IR: iret  | DR:      11 | SP:   0 | Addr: 199 | ToMem:      16 | N: 0 | Z: 1 | INT_EN: 1 | mem[Addr]:      11 | mode: normal
+  DEBUG   machine:decode_and_execute_instruction TICK:   43 | AC:   80 | PC:  15 | IR: jz    | DR:      15 | SP:   0 | Addr:  16 | ToMem:      16 | N: 0 | Z: 0 | INT_EN: 1 | mem[Addr]:      15 | mode: normal
+  WARNING machine:decode_and_execute_instruction Entering into interruption...
+  DEBUG   machine:decode_and_execute_instruction TICK:   51 | AC:   80 | PC:  19 | IR: di    | DR:       0 | SP: 198 | Addr:  18 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:       0 | mode: interrupt
+  DEBUG   machine:signal_latch_ac input: 'e'
+  DEBUG   machine:decode_and_execute_instruction TICK:   54 | AC:  101 | PC:  20 | IR: in    | DR:      10 | SP: 198 | Addr:  19 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      10 | mode: interrupt
+  DEBUG   machine:signal_output output_symbol_buffer: 'P' << 'e'
+  DEBUG   machine:decode_and_execute_instruction TICK:   58 | AC:  101 | PC:  21 | IR: out   | DR:       1 | SP: 198 | Addr:  11 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:       1 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:   62 | AC:  101 | PC:  22 | IR: cmp   | DR:      10 | SP: 198 | Addr:  13 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      10 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:   65 | AC:  101 | PC:  26 | IR: jnz   | DR:      26 | SP: 198 | Addr:  22 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      26 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:   73 | AC:  101 | PC:  15 | IR: iret  | DR:       1 | SP:   0 | Addr: 199 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 1 | mem[Addr]:       1 | mode: normal
+  WARNING machine:decode_and_execute_instruction Entering into interruption...
+  DEBUG   machine:decode_and_execute_instruction TICK:   81 | AC:  101 | PC:  19 | IR: di    | DR:       0 | SP: 198 | Addr:  18 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:       0 | mode: interrupt
+  DEBUG   machine:signal_latch_ac input: 'n'
+  DEBUG   machine:decode_and_execute_instruction TICK:   84 | AC:  110 | PC:  20 | IR: in    | DR:      10 | SP: 198 | Addr:  19 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      10 | mode: interrupt
+  DEBUG   machine:signal_output output_symbol_buffer: 'Pe' << 'n'
+  DEBUG   machine:decode_and_execute_instruction TICK:   88 | AC:  110 | PC:  21 | IR: out   | DR:       1 | SP: 198 | Addr:  11 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:       1 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:   92 | AC:  110 | PC:  22 | IR: cmp   | DR:      10 | SP: 198 | Addr:  13 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      10 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:   95 | AC:  110 | PC:  26 | IR: jnz   | DR:      26 | SP: 198 | Addr:  22 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      26 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  103 | AC:  110 | PC:  15 | IR: iret  | DR:       1 | SP:   0 | Addr: 199 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 1 | mem[Addr]:       1 | mode: normal
+  WARNING machine:decode_and_execute_instruction Entering into interruption...
+  DEBUG   machine:decode_and_execute_instruction TICK:  111 | AC:  110 | PC:  19 | IR: di    | DR:       0 | SP: 198 | Addr:  18 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:       0 | mode: interrupt
+  DEBUG   machine:signal_latch_ac input: 's'
+  DEBUG   machine:decode_and_execute_instruction TICK:  114 | AC:  115 | PC:  20 | IR: in    | DR:      10 | SP: 198 | Addr:  19 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      10 | mode: interrupt
+  DEBUG   machine:signal_output output_symbol_buffer: 'Pen' << 's'
+  DEBUG   machine:decode_and_execute_instruction TICK:  118 | AC:  115 | PC:  21 | IR: out   | DR:       1 | SP: 198 | Addr:  11 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:       1 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  122 | AC:  115 | PC:  22 | IR: cmp   | DR:      10 | SP: 198 | Addr:  13 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      10 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  125 | AC:  115 | PC:  26 | IR: jnz   | DR:      26 | SP: 198 | Addr:  22 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      26 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  133 | AC:  115 | PC:  15 | IR: iret  | DR:       1 | SP:   0 | Addr: 199 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 1 | mem[Addr]:       1 | mode: normal
+  WARNING machine:decode_and_execute_instruction Entering into interruption...
+  DEBUG   machine:decode_and_execute_instruction TICK:  141 | AC:  115 | PC:  19 | IR: di    | DR:       0 | SP: 198 | Addr:  18 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:       0 | mode: interrupt
+  DEBUG   machine:signal_latch_ac input: 'k'
+  DEBUG   machine:decode_and_execute_instruction TICK:  144 | AC:  107 | PC:  20 | IR: in    | DR:      10 | SP: 198 | Addr:  19 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      10 | mode: interrupt
+  DEBUG   machine:signal_output output_symbol_buffer: 'Pens' << 'k'
+  DEBUG   machine:decode_and_execute_instruction TICK:  148 | AC:  107 | PC:  21 | IR: out   | DR:       1 | SP: 198 | Addr:  11 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:       1 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  152 | AC:  107 | PC:  22 | IR: cmp   | DR:      10 | SP: 198 | Addr:  13 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      10 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  155 | AC:  107 | PC:  26 | IR: jnz   | DR:      26 | SP: 198 | Addr:  22 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      26 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  163 | AC:  107 | PC:  15 | IR: iret  | DR:       1 | SP:   0 | Addr: 199 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 1 | mem[Addr]:       1 | mode: normal
+  WARNING machine:decode_and_execute_instruction Entering into interruption...
+  DEBUG   machine:decode_and_execute_instruction TICK:  171 | AC:  107 | PC:  19 | IR: di    | DR:       0 | SP: 198 | Addr:  18 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:       0 | mode: interrupt
+  DEBUG   machine:signal_latch_ac input: 'o'
+  DEBUG   machine:decode_and_execute_instruction TICK:  174 | AC:  111 | PC:  20 | IR: in    | DR:      10 | SP: 198 | Addr:  19 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      10 | mode: interrupt
+  DEBUG   machine:signal_output output_symbol_buffer: 'Pensk' << 'o'
+  DEBUG   machine:decode_and_execute_instruction TICK:  178 | AC:  111 | PC:  21 | IR: out   | DR:       1 | SP: 198 | Addr:  11 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:       1 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  182 | AC:  111 | PC:  22 | IR: cmp   | DR:      10 | SP: 198 | Addr:  13 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      10 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  185 | AC:  111 | PC:  26 | IR: jnz   | DR:      26 | SP: 198 | Addr:  22 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      26 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  193 | AC:  111 | PC:  15 | IR: iret  | DR:       1 | SP:   0 | Addr: 199 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 1 | mem[Addr]:       1 | mode: normal
+  WARNING machine:decode_and_execute_instruction Entering into interruption...
+  DEBUG   machine:decode_and_execute_instruction TICK:  201 | AC:  111 | PC:  19 | IR: di    | DR:       0 | SP: 198 | Addr:  18 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:       0 | mode: interrupt
+  DEBUG   machine:signal_latch_ac input: 'i'
+  DEBUG   machine:decode_and_execute_instruction TICK:  204 | AC:  105 | PC:  20 | IR: in    | DR:      10 | SP: 198 | Addr:  19 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      10 | mode: interrupt
+  DEBUG   machine:signal_output output_symbol_buffer: 'Pensko' << 'i'
+  DEBUG   machine:decode_and_execute_instruction TICK:  208 | AC:  105 | PC:  21 | IR: out   | DR:       1 | SP: 198 | Addr:  11 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:       1 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  212 | AC:  105 | PC:  22 | IR: cmp   | DR:      10 | SP: 198 | Addr:  13 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      10 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  215 | AC:  105 | PC:  26 | IR: jnz   | DR:      26 | SP: 198 | Addr:  22 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      26 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  223 | AC:  105 | PC:  15 | IR: iret  | DR:       1 | SP:   0 | Addr: 199 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 1 | mem[Addr]:       1 | mode: normal
+  WARNING machine:decode_and_execute_instruction Entering into interruption...
+  DEBUG   machine:decode_and_execute_instruction TICK:  231 | AC:  105 | PC:  19 | IR: di    | DR:       0 | SP: 198 | Addr:  18 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:       0 | mode: interrupt
+  DEBUG   machine:signal_latch_ac input: '\n'
+  DEBUG   machine:decode_and_execute_instruction TICK:  234 | AC:   10 | PC:  20 | IR: in    | DR:      10 | SP: 198 | Addr:  19 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      10 | mode: interrupt
+  DEBUG   machine:signal_output output_symbol_buffer: 'Penskoi' << '\n'
+  DEBUG   machine:decode_and_execute_instruction TICK:  238 | AC:   10 | PC:  21 | IR: out   | DR:       1 | SP: 198 | Addr:  11 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:       1 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  242 | AC:   10 | PC:  22 | IR: cmp   | DR:      10 | SP: 198 | Addr:  13 | ToMem:      15 | N: 0 | Z: 1 | INT_EN: 0 | mem[Addr]:      10 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  245 | AC:   10 | PC:  23 | IR: jnz   | DR:      26 | SP: 198 | Addr:  22 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:      26 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  249 | AC:    0 | PC:  24 | IR: load  | DR:       0 | SP: 198 | Addr:  12 | ToMem:      15 | N: 0 | Z: 1 | INT_EN: 0 | mem[Addr]:       0 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  252 | AC:    1 | PC:  25 | IR: inc   | DR:       0 | SP: 198 | Addr:  24 | ToMem:      15 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:       0 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  256 | AC:    1 | PC:  26 | IR: store | DR:      12 | SP: 198 | Addr:  12 | ToMem:       1 | N: 0 | Z: 0 | INT_EN: 0 | mem[Addr]:       1 | mode: interrupt
+  DEBUG   machine:decode_and_execute_instruction TICK:  264 | AC:    1 | PC:  15 | IR: iret  | DR:       1 | SP:   0 | Addr: 199 | ToMem:       1 | N: 0 | Z: 0 | INT_EN: 1 | mem[Addr]:       1 | mode: normal
+  DEBUG   machine:decode_and_execute_instruction TICK:  268 | AC:    1 | PC:  16 | IR: load  | DR:       1 | SP:   0 | Addr:  12 | ToMem:       1 | N: 0 | Z: 0 | INT_EN: 1 | mem[Addr]:       1 | mode: normal
+  DEBUG   machine:decode_and_execute_instruction TICK:  271 | AC:    1 | PC:  17 | IR: jz    | DR:      15 | SP:   0 | Addr:  16 | ToMem:       1 | N: 0 | Z: 0 | INT_EN: 1 | mem[Addr]:      15 | mode: normal
+  INFO    machine:simulation    output_symbol_buffer: 'Penskoi'
+  INFO    machine:simulation    output_numeric_buffer: []
